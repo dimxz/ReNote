@@ -7,18 +7,66 @@
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <header>ReNote</header>
-    <main>
-        <input type="text" id="search-input" placeholder="Search notes...">
+    <header class="header">
+        <div class="header-brand">
+            <div class="logo">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+                    <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+                    <path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>
+                </svg>
+            </div>
+            <span class="brand-name">ReNote</span>
+        </div>
+        <div class="header-actions">
+            <span class="note-count" id="note-count">0 Notes</span>
+            <button class="btn-add" id="add-note" title="New note">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/><path d="M12 5v14"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+    
+    <div class="search-bar">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <button class="search-clear hidden" id="search-clear" title="Clear">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </svg>
+        </button>
+    </div>
 
+    <main class="main">
         <ul id="notes-list"></ul>
+        <div class="empty-state" hidden id="empty-state">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <p>No notes found</p>
+        </div>
     </main>
-    <footer class="footer">
-        <button id="export">Export Notes</button>
 
-        <button id="import">Import Notes</button>
+    <footer class="footer">
+        <button id="export" class="btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+            </svg>
+            Export
+        </button>
+        <button id="import" class="btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>
+            </svg>
+            Import
+        </button>
         <input type="file" id="import-file" accept=".json" class="hidden">
     </footer>
+
     <script src="popup.js"></script>
 </body>
 </html>
