@@ -33,8 +33,8 @@ function createNote() {
     let dragging = false;
     let startX, startY, originLeft, originTop;
     card.style.position = "absolute";
-    card.style.left     = (card.offsetLeft || 100) + "px";
-    card.style.top      = (card.offsetTop  || 100) + "px";
+    card.style.left = (window.scrollX + 100) + "px";
+    card.style.top  = (window.scrollY + 100) + "px";
 
     handle.addEventListener("mousedown", function (e) {
         if (e.target.closest("button")) return;
@@ -73,5 +73,4 @@ floatingButton.addEventListener('click', () => {
     createNote();
 });
 
-createNote();
 document.body.append(floatingButton);

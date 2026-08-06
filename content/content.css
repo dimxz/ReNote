@@ -15,6 +15,7 @@
     box-shadow: 0 2px 8px rgba(251, 191, 36, 0.25);
     transition: background 0.15s, transform 0.1s;
     flex-shrink: 0;
+    z-index: 99999;
 }
 .rn-add-btn:hover { background: #F59E0B; }
 .rn-add-btn:active { transform: scale(0.92); }
@@ -40,6 +41,8 @@
         0 8px 32px rgba(0,0,0,0.60),
         0 2px 8px  rgba(0,0,0,0.40);
     position: relative;       
+    z-index: 99999;
+
 }
 .rn-header {
     display: flex;
@@ -123,8 +126,8 @@
     background: transparent;
     border: none;
     outline: none;
-    resize: none;           /* no manual resize handle */
-    overflow: hidden;       /* JS auto-grow handles height */
+    resize: none;          
+    overflow: hidden;      
     font-family: inherit;
     font-size: 13px;
     font-weight: 400;
@@ -132,6 +135,7 @@
     line-height: 1.65;
     caret-color: #FBBF24;
     transition: color 0.15s;
+    outline-style: none;
 }
 .rn-note-footer {
     display: flex;
