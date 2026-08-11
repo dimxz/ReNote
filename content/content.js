@@ -1,6 +1,22 @@
+//restoring saved notes on page load
+async function loadNotes() {
+    const result = await chrome.storage.local.get('notes');
+    const notes = result.notes || {};
 
-function createNote() {
+    const pageKey = location.href;
+    const pageNotes = notes[pageKey] || [];
+    for (const note of pageNotes) {
+        createNote(note);
 
+    }
+
+    console.log(pageNotes);
+}
+
+loadNotes();
+
+// create a new note ui
+function createNote(savedData) {
     const card = document.createElement('div');
     card.className = 'rn-note';
     card.innerHTML = `
@@ -14,60 +30,97 @@ function createNote() {
     const btnClose = card.querySelector('.rn-btn-close');
     const bodyTextarea = card.querySelector('.rn-note-textarea-input');
     const handle = card.querySelector('.rn-header');
-    card.dataset.id = Date.now();
+    card.dataset.id = savedData ? savedData.id : Date.now();
 
 
-    bodyTextarea.addEventListener("input", function () {
-        console.log(bodyTextarea.value)
+    bodyTextarea.addEventListener("input", function() {
+        saveNote(card);
     });
 
     // Close button
-    btnClose.addEventListener("click", function () {
-        card.style.opacity  = "0";
+    btnClose.addEventListener("click", function() {
+        card.style.opacity = "0";
         card.style.transform = "scale(0.95)";
         card.style.transition = "opacity 0.15s, transform 0.15s";
-        setTimeout(function () { card.remove(); }, 160);
+        setTimeout(function() {
+            card.remove();
+        }, 160);
     });
 
     // Dragging
     let dragging = false;
     let startX, startY, originLeft, originTop;
     card.style.position = "absolute";
-    card.style.left = (window.scrollX + 100) + "px";
-    card.style.top  = (window.scrollY + 100) + "px";
+    card.style.left = savedData ? savedData.x + 'px' : (window.scrollX + 100) + "px";
+    card.style.top = savedData ? savedData.y + 'px' : (window.scrollY + 100) + "px";
 
-    handle.addEventListener("mousedown", function (e) {
+    handle.addEventListener("mousedown", function(e) {
         if (e.target.closest("button")) return;
-        dragging  = true;
-        startX    = e.clientX;
-        startY    = e.clientY;
+        dragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
         originLeft = parseInt(card.style.left, 10);
-        originTop  = parseInt(card.style.top,  10);
+        originTop = parseInt(card.style.top, 10);
         document.body.style.userSelect = "none";
     });
-
-    document.addEventListener("mousemove", function (e) {
+    
+    document.addEventListener("mousemove", function(e) {
         if (!dragging) return;
         card.style.left = (originLeft + e.clientX - startX) + "px";
-        card.style.top  = (originTop  + e.clientY - startY) + "px";
+        card.style.top = (originTop + e.clientY - startY) + "px";
     });
 
-    document.addEventListener("mouseup", function () {
+    document.addEventListener("mouseup", function() {
         if (dragging) {
             dragging = false;
             document.body.style.userSelect = "";
         }
     });
 
-    bodyTextarea.focus();
+    if (savedData) { bodyTextarea.value = savedData.text; }
+    if (!savedData) { bodyTextarea.focus(); }
     return card;
 }
 
+async function saveNote(card) {
+    const noteData = {
+        id: card.dataset.id,
+        text: card.querySelector('.rn-note-textarea-input').value,
+        x: parseInt(card.style.left),
+        y: parseInt(card.style.top)
+    };
 
-const floatingButton =  document.createElement('button');
+    const result = await chrome.storage.local.get('notes');
+    const notes = result.notes || {};
+
+    const pageKey = location.href;
+    const pageNotes = notes[pageKey] || [];
+    const index = pageNotes.findIndex(note => note.id === noteData.id);
+
+    if (index === -1) {
+        pageNotes.push(noteData);
+    } else {
+        pageNotes[index] = noteData;
+    }
+
+    notes[pageKey] = pageNotes;
+    await chrome.storage.local.set({
+        notes
+    });
+
+
+
+    // console.log(pageNotes);
+    // console.log('index: ' + index);
+    // console.log(noteData)
+}
+
+
+// create new floating button
+const floatingButton = document.createElement('button');
 floatingButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <path d="M5 12h14"/><path d="M12 5v14"/> </svg>';
 floatingButton.className = 'rn-add-btn';
-floatingButton.title = 'New note';
+floatingButton.title = 'New Note';
 
 floatingButton.addEventListener('click', () => {
     createNote();
