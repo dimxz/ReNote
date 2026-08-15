@@ -45,6 +45,7 @@ function createNote(savedData) {
         setTimeout(function() {
             card.remove();
         }, 160);
+        deleteNote(card);
     });
 
     // Dragging
@@ -81,6 +82,7 @@ function createNote(savedData) {
     if (!savedData) { bodyTextarea.focus(); }
     return card;
 }
+
 // save note to local storage
 async function saveNote(card) {
     const noteData = {
@@ -111,6 +113,24 @@ async function saveNote(card) {
 
 }
 
+// delete note
+async function deleteNote(card) {
+
+    const result = await chrome.storage.local.get('notes');
+    const notes = result.notes || {};
+
+    const pageKey = location.href;
+    const pageNotes = notes[pageKey] || [];
+  
+    const updatedNotes = pageNotes.filter(note => note.id !== card.dataset.id);
+    notes[pageKey] = updatedNotes;
+    await chrome.storage.local.set({
+        notes
+    });
+
+}
+
+// receiver for add note button in popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'create-note') {
         createNote();
@@ -122,9 +142,7 @@ const floatingButton = document.createElement('button');
 floatingButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <path d="M5 12h14"/><path d="M12 5v14"/> </svg>';
 floatingButton.className = 'rn-add-btn';
 floatingButton.title = 'New Note';
-
 floatingButton.addEventListener('click', () => {
     createNote();
 });
-
 document.body.append(floatingButton);
