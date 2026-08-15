@@ -1,4 +1,9 @@
 
+const addNoteBtn = document.getElementById('add-note');
+addNoteBtn.addEventListener('click', async () => {
+    const tabs = await chrome.tabs.query({active: true, currentWindow: true});
+    chrome.tabs.sendMessage(tabs[0].id, { action: 'create-note' });
+});
 
 async function renderNotes() {
     
@@ -26,5 +31,7 @@ async function renderNotes() {
             notesListEl.appendChild(li);
         }
     }
+
+    
 }
 renderNotes();

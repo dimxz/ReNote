@@ -81,7 +81,7 @@ function createNote(savedData) {
     if (!savedData) { bodyTextarea.focus(); }
     return card;
 }
-
+// save note to local storage
 async function saveNote(card) {
     const noteData = {
         id: card.dataset.id,
@@ -109,12 +109,13 @@ async function saveNote(card) {
     });
 
 
-
-    // console.log(pageNotes);
-    // console.log('index: ' + index);
-    // console.log(noteData)
 }
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'create-note') {
+        createNote();
+    }
+});
 
 // create new floating button
 const floatingButton = document.createElement('button');
