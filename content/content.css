@@ -1,3 +1,25 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 .rn-add-btn {
     position: fixed;
     top: 20px;
@@ -32,6 +54,7 @@
     width: 320px;
     display: flex;
     flex-direction: column;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: #141414;
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 16px;

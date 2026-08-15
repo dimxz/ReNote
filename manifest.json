@@ -22,7 +22,7 @@
       "css": ["content/content.css"]
     }
   ],
-  "permissions": ["storage"]
+  "permissions": ["storage", "activeTab"]
 }
 
 
