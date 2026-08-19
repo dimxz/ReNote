@@ -1,12 +1,14 @@
 
+// button to add new note on popup
 const addNoteBtn = document.getElementById('add-note');
 addNoteBtn.addEventListener('click', async () => {
     const tabs = await chrome.tabs.query({active: true, currentWindow: true});
     chrome.tabs.sendMessage(tabs[0].id, { action: 'create-note' });
 });
 
+// show notes on popup
 async function renderNotes() {
-    
+
     const tabs = await chrome.tabs.query({active: true, currentWindow: true});
     const pageKey = tabs[0].url;
 

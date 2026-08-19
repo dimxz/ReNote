@@ -12,7 +12,6 @@ async function loadNotes() {
 
     console.log(pageNotes);
 }
-
 loadNotes();
 
 // create a new note ui
@@ -37,7 +36,7 @@ function createNote(savedData) {
         saveNote(card);
     });
 
-    // Close button
+    // close & delete note button
     btnClose.addEventListener("click", function() {
         card.style.opacity = "0";
         card.style.transform = "scale(0.95)";
@@ -48,7 +47,7 @@ function createNote(savedData) {
         deleteNote(card);
     });
 
-    // Dragging
+    // note card dragging
     let dragging = false;
     let startX, startY, originLeft, originTop;
     card.style.position = "absolute";
