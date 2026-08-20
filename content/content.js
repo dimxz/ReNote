@@ -108,7 +108,7 @@ async function saveNote(card) {
     await chrome.storage.local.set({
         notes
     });
-
+    
 
 }
 
@@ -133,6 +133,7 @@ async function deleteNote(card) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'create-note') {
         createNote();
+        return true;
     }
 });
 

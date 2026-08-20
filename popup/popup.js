@@ -6,8 +6,29 @@ addNoteBtn.addEventListener('click', async () => {
     chrome.tabs.sendMessage(tabs[0].id, { action: 'create-note' });
 });
 
+
+// live input from search bar
+const searchInput = document.getElementById('search-input');
+searchInput.addEventListener('input', () => {
+    renderNotes(searchInput.value);
+});
+
+
+// clear search button
+const clearBtn = document.getElementById('search-clear');
+searchInput.addEventListener('input', () => {
+    renderNotes(searchInput.value);
+    clearBtn.classList.toggle('hidden', searchInput.value == '');
+});
+clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearBtn.classList.add('hidden');
+});
+
+
+
 // show notes on popup
-async function renderNotes() {
+async function renderNotes(searchTerms = '') {
 
     const tabs = await chrome.tabs.query({active: true, currentWindow: true});
     const pageKey = tabs[0].url;
@@ -15,16 +36,19 @@ async function renderNotes() {
     const result = await chrome.storage.local.get('notes');
     const notes = result.notes || {};
     const pageNotes = notes[pageKey] || [];
+    const filteredNotes = pageNotes.filter(note => note.text.toLowerCase().includes(searchTerms.toLowerCase())
+    );
+
     const notesListEl = document.getElementById('notes-list');
     const emptyStateEl = document.getElementById('empty-state');    
+    notesListEl.innerHTML = '';
 
-    if (pageNotes.length === 0) {
+    if (filteredNotes.length === 0) {
         emptyStateEl.classList.remove('hidden');
     } else {
         emptyStateEl.classList.add('hidden');
 
-        notesListEl.innerHTML = '';
-        for (const note of pageNotes) {
+        for (const note of filteredNotes) {
             const li = document.createElement('li');
             const preview = document.createElement('span');
             preview.className = 'note-preview';
