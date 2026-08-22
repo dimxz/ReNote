@@ -1,5 +1,5 @@
 
-// button to add new note on popup
+// add new note button
 const addNoteBtn = document.getElementById('add-note');
 addNoteBtn.addEventListener('click', async () => {
     const tabs = await chrome.tabs.query({active: true, currentWindow: true});
@@ -25,6 +25,29 @@ clearBtn.addEventListener('click', () => {
     clearBtn.classList.add('hidden');
 });
 
+
+// per page export function
+const exportBtn = document.getElementById('export');
+exportBtn.addEventListener('click', async () => {
+    const tabs = await chrome.tabs.query({active: true, currentWindow: true});
+    const pageKey = tabs[0].url;
+
+    const result = await chrome.storage.local.get('notes');
+    const notes = result.notes || {};
+    const pageNotes = notes[pageKey]|| [];
+
+    const exportData = { url: pageKey, notes: pageNotes};
+    const dataBlob = new Blob( [JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const downloadUrl = URL.createObjectURL(dataBlob);
+    console.log(exportData);
+    
+    const tempA = document.createElement('a');
+    tempA.href = downloadUrl;
+    tempA.download = "renote-export.json";
+    tempA.click();
+    URL.revokeObjectURL(downloadUrl);
+
+})
 
 
 // show notes on popup
