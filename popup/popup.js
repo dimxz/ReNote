@@ -50,6 +50,51 @@ exportBtn.addEventListener('click', async () => {
 })
 
 
+// per page import function
+const importButton = document.getElementById('import');
+const importFileInput = document.getElementById('import-file');
+importButton.addEventListener('click', () => {
+    importFileInput.click();
+})
+
+importFileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader()
+    reader.onload = async function(e) {
+        const fileContent = e.target.result;
+        let parsedData;
+        try {
+            parsedData = JSON.parse(fileContent);
+            console.log(parsedData);
+        } catch (err) {
+            console.error('Invalid JSON file:', err);
+            return;
+        }
+
+        const tabs = await chrome.tabs.query({active: true, currentWindow: true});
+        const currentPageKey =  tabs[0].url;
+
+        let targetKey = currentPageKey;
+        if (parsedData.url !== currentPageKey) {
+            const restoreToOriginal = confirm(
+                `This file contains notes from:\n${parsedData.url}\n\nClick OK to restore to that page, or Cancel to import into the current page instead.`
+            );
+        targetKey = restoreToOriginal ? parsedData.url : currentPageKey;
+        }
+
+        const result = await chrome.storage.local.get('notes');
+        const notes = result.notes || {};
+        notes[targetKey] = parsedData.notes;
+        await chrome.storage.local.set({notes});
+
+        renderNotes();
+    }
+    reader.readAsText(file);
+
+})
+
+
 // show notes on popup
 async function renderNotes(searchTerms = '') {
 
