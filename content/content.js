@@ -137,6 +137,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+
+// // receiver for load note 
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//     if (message.action === 'load-note') {
+//         loadNotes()
+//         return true;
+//     }
+// });
+
 // create new floating button
 const floatingButton = document.createElement('button');
 floatingButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <path d="M5 12h14"/><path d="M12 5v14"/> </svg>';

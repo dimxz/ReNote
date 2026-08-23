@@ -85,7 +85,16 @@ importFileInput.addEventListener('change', (event) => {
 
         const result = await chrome.storage.local.get('notes');
         const notes = result.notes || {};
-        notes[targetKey] = parsedData.notes;
+        const existingNotes = notes[targetKey] || [];
+
+        const importedNotesWithNewIds = parsedData.notes.map((note, index) => ({
+            ...note,
+            id: Date.now() + index
+        }));
+        const mergedNotes = [...existingNotes, ...importedNotesWithNewIds];
+
+
+        notes[targetKey] = mergedNotes;
         await chrome.storage.local.set({notes});
 
         renderNotes();
