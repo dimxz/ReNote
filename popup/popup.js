@@ -89,7 +89,7 @@ importFileInput.addEventListener('change', (event) => {
 
         const importedNotesWithNewIds = parsedData.notes.map((note, index) => ({
             ...note,
-            id: Date.now() + index
+            id: String(Date.now() + index)
         }));
         const mergedNotes = [...existingNotes, ...importedNotesWithNewIds];
 
