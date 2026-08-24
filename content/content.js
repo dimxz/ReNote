@@ -1,5 +1,6 @@
 //restoring saved notes on page load
 async function loadNotes() {
+    document.querySelectorAll('.rn-note').forEach(el => el.remove())
     const result = await chrome.storage.local.get('notes');
     const notes = result.notes || {};
 
@@ -138,13 +139,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 
-// // receiver for load note 
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//     if (message.action === 'load-note') {
-//         loadNotes()
-//         return true;
-//     }
-// });
+// receiver for load note 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'load-note') {
+        loadNotes()
+        return true;
+    }
+});
 
 // create new floating button
 const floatingButton = document.createElement('button');

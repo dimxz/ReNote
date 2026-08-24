@@ -97,6 +97,7 @@ importFileInput.addEventListener('change', (event) => {
         notes[targetKey] = mergedNotes;
         await chrome.storage.local.set({notes});
 
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'load-note' });
         renderNotes();
     }
     reader.readAsText(file);
