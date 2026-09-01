@@ -3,7 +3,7 @@ async function loadNotes() {
     document.querySelectorAll('.rn-note').forEach(el => el.remove())
     const result = await chrome.storage.local.get('notes');
     const notes = result.notes || {};
-
+    
     const pageKey = location.href;
     const pageNotes = notes[pageKey] || [];
     for (const note of pageNotes) {
@@ -15,7 +15,7 @@ async function loadNotes() {
 }
 loadNotes();
 
-// create a new note ui
+// create new note ui
 function createNote(savedData) {
     const card = document.createElement('div');
     card.className = 'rn-note';
@@ -37,7 +37,7 @@ function createNote(savedData) {
         saveNote(card);
     });
 
-    // close & delete note button
+    // delete note when close button clicked
     btnClose.addEventListener("click", function() {
         card.style.opacity = "0";
         card.style.transform = "scale(0.95)";
@@ -106,10 +106,7 @@ async function saveNote(card) {
     }
 
     notes[pageKey] = pageNotes;
-    await chrome.storage.local.set({
-        notes
-    });
-    
+    await chrome.storage.local.set({ notes });
 
 }
 
@@ -130,7 +127,7 @@ async function deleteNote(card) {
 
 }
 
-// receiver for add note button in popup
+// receiver for add note button on the pop up
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'create-note') {
         createNote();

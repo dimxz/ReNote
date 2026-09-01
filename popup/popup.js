@@ -34,12 +34,12 @@ exportBtn.addEventListener('click', async () => {
 
     const result = await chrome.storage.local.get('notes');
     const notes = result.notes || {};
-    const pageNotes = notes[pageKey]|| [];
+    const pageNotes = notes[pageKey] || [];
 
     const exportData = { url: pageKey, notes: pageNotes};
     const dataBlob = new Blob( [JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const downloadUrl = URL.createObjectURL(dataBlob);
-    console.log(exportData);
+
     
     const tempA = document.createElement('a');
     tempA.href = downloadUrl;
@@ -66,7 +66,6 @@ importFileInput.addEventListener('change', (event) => {
         let parsedData;
         try {
             parsedData = JSON.parse(fileContent);
-            console.log(parsedData);
         } catch (err) {
             console.error('Invalid JSON file:', err);
             return;
@@ -104,6 +103,19 @@ importFileInput.addEventListener('change', (event) => {
 
 })
 
+
+// Total notes count
+async function notesCount() {
+    notesCount = document.getElementById('note-count');
+    const tabs = await chrome.tabs.query({active: true, currentWindow: true});
+    const pageKey = tabs[0].url;
+
+    const result = await chrome.storage.local.get('notes');
+    const notes = result.notes || {};    
+
+    
+
+}
 
 // show notes on popup
 async function renderNotes(searchTerms = '') {
