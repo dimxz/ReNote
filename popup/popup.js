@@ -76,7 +76,7 @@ importFileInput.addEventListener('change', (event) => {
 
         let targetKey = currentPageKey;
         if (parsedData.url !== currentPageKey) {
-            const restoreToOriginal = confirm(
+            const restoreToOriginal = await showConfirmModal(
                 `This file contains notes from:\n${parsedData.url}\n\nClick OK to restore to that page, or Cancel to import into the current page instead.`
             );
         targetKey = restoreToOriginal ? parsedData.url : currentPageKey;
@@ -104,19 +104,6 @@ importFileInput.addEventListener('change', (event) => {
 })
 
 
-// Total notes count
-async function notesCount() {
-    notesCount = document.getElementById('note-count');
-    const tabs = await chrome.tabs.query({active: true, currentWindow: true});
-    const pageKey = tabs[0].url;
-
-    const result = await chrome.storage.local.get('notes');
-    const notes = result.notes || {};    
-
-    
-
-}
-
 // show notes on popup
 async function renderNotes(searchTerms = '') {
 
@@ -133,6 +120,11 @@ async function renderNotes(searchTerms = '') {
     const emptyStateEl = document.getElementById('empty-state');    
     notesListEl.innerHTML = '';
 
+    // notes count
+    const noteWord = pageNotes.length === 1 ? 'Note' : 'Notes';
+    const noteCountEl = document.getElementById('note-count');
+    noteCountEl.textContent = `${pageNotes.length} ${noteWord}`;
+ 
     if (filteredNotes.length === 0) {
         emptyStateEl.classList.remove('hidden');
     } else {
@@ -149,5 +141,30 @@ async function renderNotes(searchTerms = '') {
     }
 
     
+}
+
+
+// confirm modal
+function showConfirmModal(message) {
+    new Promise((resolve) => {
+        const overlay = document.getElementById('rn-modal-overlay');
+        const messageEl = document.getElementById('rn-modal-message');
+        const confirmBtn = document.getElementById('rn-modal-confirm')
+        const cancelBtn = document.getElementById('rn-modal-cancel');
+
+        message.innerHTML = message;
+        overlay.classList.remove('hidden');
+
+        confirmBtn.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+            resolve(true);
+        }, { once : true });
+
+        cancelBtn.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+            resolve(false);
+        }, { once : true });
+    
+    });
 }
 renderNotes();

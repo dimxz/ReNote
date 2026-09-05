@@ -67,7 +67,15 @@
         </button>
         <input type="file" id="import-file" accept=".json" class="hidden">
     </footer>
-
+    <div class="rn-modal-overlay hidden" id="rn-modal-overlay" >
+        <div class="rn-modal">
+            <p class="rn-modal-message" id="rn-modal-message"></p>
+            <div class="rn-modal-actions">
+                <button class="rn-modal-btn rn-modal-cancel" id="rn-modal-cancel">Cancel</button>
+                <button class="rn-modal-btn rn-modal-confirm" id="rn-modal-confirm">OK</button>
+            </div>
+        </div>
+    </div>
     <script src="popup.js"></script>
 </body>
 </html>
